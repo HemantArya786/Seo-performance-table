@@ -1,136 +1,121 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const seoData = [
-  {
-    date: "2025-04-15",
-    position: 63.39,
-    traffic: 0,
-    impressions: 3075,
-    clicks: 1,
-    ctr: 0.0,
-  },
-  {
-    date: "2025-04-16",
-    position: 64.72,
-    traffic: 0,
-    impressions: 2455,
-    clicks: 0,
-    ctr: 0.0,
-  },
-  {
-    date: "2025-04-17",
-    position: 63.44,
-    traffic: 0,
-    impressions: 2633,
-    clicks: 1,
-    ctr: 0.0,
-  },
-  {
-    date: "2025-04-18",
-    position: 64.47,
-    traffic: 0,
-    impressions: 2358,
-    clicks: 1,
-    ctr: 0.0,
-  },
-  {
-    date: "2025-04-19",
-    position: 65.85,
-    traffic: 0,
-    impressions: 2169,
-    clicks: 2,
-    ctr: 0.0,
-  },
-  {
-    date: "2025-04-20",
-    position: 66.78,
-    traffic: 0,
-    impressions: 1983,
-    clicks: 4,
-    ctr: 0.0,
-  },
-  {
-    date: "2025-04-21",
-    position: 64.2,
-    traffic: 0,
-    impressions: 2320,
-    clicks: 3,
-    ctr: 0.0,
-  },
-  {
-    date: "2025-04-22",
-    position: 67.16,
-    traffic: 0,
-    impressions: 2986,
-    clicks: 2,
-    ctr: 0.0,
-  },
-  {
-    date: "2025-04-23",
-    position: 67.25,
-    traffic: 0,
-    impressions: 2389,
-    clicks: 1,
-    ctr: 0.0,
-  },
-];
+const PerformanceTable = () => {
+  const [data, setData] = useState([
+    {
+      date: "2025-05-01",
+      position: 3.2,
+      traffic: 120,
+      impressions: 900,
+      clicks: 50,
+    },
+    {
+      date: "2025-05-02",
+      position: 2.8,
+      traffic: 140,
+      impressions: 1000,
+      clicks: 60,
+    },
+    {
+      date: "2025-05-03",
+      position: 4.1,
+      traffic: 100,
+      impressions: 850,
+      clicks: 40,
+    },
+    {
+      date: "2025-05-04",
+      position: 2.4,
+      traffic: 180,
+      impressions: 1100,
+      clicks: 70,
+    },
+  ]);
+  const [sortBy, setSortBy] = useState("date");
+  const [sortOrder, setSortOrder] = useState("asc");
 
-export default function SEOTable() {
+  useEffect(() => {
+    // Simulate fetching data from a JSON file or API
+    const fetchData = async () => {
+      const response = await fetch("/data/performanceData.json"); // Make sure this file exists
+      const result = await response.json();
+      setData(result);
+    };
+
+    fetchData();
+  }, []);
+
+  const handleSort = (key) => {
+    const order = key === sortBy && sortOrder === "asc" ? "desc" : "asc";
+    setSortBy(key);
+    setSortOrder(order);
+    const sorted = [...data].sort((a, b) => {
+      if (order === "asc") {
+        return a[key] > b[key] ? 1 : -1;
+      } else {
+        return a[key] < b[key] ? 1 : -1;
+      }
+    });
+    setData(sorted);
+  };
+
+  const getCTR = (clicks, impressions) => {
+    return impressions === 0 ? 0 : ((clicks / impressions) * 100).toFixed(2);
+  };
+
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4 text-center">
+    <div className="p-4 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4 text-gray-800">
         SEO Scientist Performance Data
       </h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300 divide-y divide-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                Date
-              </th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                Position
-              </th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                Traffic
-              </th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                Impressions
-              </th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                Clicks
-              </th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                CTR
-              </th>
+      <div className="overflow-auto rounded-lg shadow border border-gray-300">
+        <table className="min-w-full bg-white">
+          <thead>
+            <tr className="bg-gray-200 text-left text-gray-600 uppercase text-sm leading-normal">
+              {[
+                "date",
+                "position",
+                "traffic",
+                "impressions",
+                "clicks",
+                "ctr",
+              ].map((header) => (
+                <th
+                  key={header}
+                  className="py-3 px-6 cursor-pointer hover:text-blue-600"
+                  onClick={() =>
+                    handleSort(header === "ctr" ? "clicks" : header)
+                  }
+                >
+                  {header.toUpperCase()}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {seoData.map((row, idx) => (
-              <tr key={idx}>
-                <td className="px-4 py-2 text-sm text-gray-800">{row.date}</td>
-                <td className="px-4 py-2 text-sm text-gray-800">
-                  {row.position}
-                </td>
-                <td className="px-4 py-2 text-sm text-gray-800">
-                  {row.traffic}
-                </td>
-                <td className="px-4 py-2 text-sm text-gray-800">
-                  {row.impressions}
-                </td>
-                <td className="px-4 py-2 text-sm text-gray-800">
-                  {row.clicks}
-                </td>
-                <td className="px-4 py-2 text-sm text-gray-800">
-                  {row.impressions > 0
-                    ? ((row.clicks / row.impressions) * 100).toFixed(2)
-                    : "0.00"}
+          <tbody className="text-gray-700 text-sm font-light">
+            {data.map((item, idx) => (
+              <tr
+                key={idx}
+                className="border-b border-gray-200 hover:bg-gray-100"
+              >
+                <td className="py-3 px-6">{item.date}</td>
+                <td className="py-3 px-6">{item.position}</td>
+                <td className="py-3 px-6">{item.traffic}</td>
+                <td className="py-3 px-6">{item.impressions}</td>
+                <td className="py-3 px-6">{item.clicks}</td>
+                <td className="py-3 px-6">
+                  {getCTR(item.clicks, item.impressions)}%
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <p className="text-sm text-gray-500 mt-4">
+        CTR is calculated as (Clicks / Impressions) × 100.
+      </p>
     </div>
   );
-}
+};
+
+export default PerformanceTable;
