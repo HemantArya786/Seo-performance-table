@@ -1,36 +1,38 @@
 import React, { useEffect, useState } from "react";
+import { Data } from "./Data";
 
 const PerformanceTable = () => {
-  const [data, setData] = useState([
-    {
-      date: "2025-05-01",
-      position: 3.2,
-      traffic: 120,
-      impressions: 900,
-      clicks: 50,
-    },
-    {
-      date: "2025-05-02",
-      position: 2.8,
-      traffic: 140,
-      impressions: 1000,
-      clicks: 60,
-    },
-    {
-      date: "2025-05-03",
-      position: 4.1,
-      traffic: 100,
-      impressions: 850,
-      clicks: 40,
-    },
-    {
-      date: "2025-05-04",
-      position: 2.4,
-      traffic: 180,
-      impressions: 1100,
-      clicks: 70,
-    },
-  ]);
+  const [data, setData] = useState(Data);
+  // const [data, setData] = useState([
+  //   {
+  //     date: "2025-05-01",
+  //     position: 3.2,
+  //     traffic: 120,
+  //     impressions: 900,
+  //     clicks: 50,
+  //   },
+  //   {
+  //     date: "2025-05-02",
+  //     position: 2.8,
+  //     traffic: 140,
+  //     impressions: 1000,
+  //     clicks: 60,
+  //   },
+  //   {
+  //     date: "2025-05-03",
+  //     position: 4.1,
+  //     traffic: 100,
+  //     impressions: 850,
+  //     clicks: 40,
+  //   },
+  //   {
+  //     date: "2025-05-04",
+  //     position: 2.4,
+  //     traffic: 180,
+  //     impressions: 1100,
+  //     clicks: 70,
+  //   },
+  // ]);
   const [filteredData, setFilteredData] = useState([]);
   const [sortBy, setSortBy] = useState("date");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -137,7 +139,7 @@ const PerformanceTable = () => {
               {[
                 "date",
                 "position",
-                "traffic",
+                //"traffic",
                 "impressions",
                 "clicks",
                 "ctr",
@@ -158,15 +160,16 @@ const PerformanceTable = () => {
             {currentRows.map((item, idx) => (
               <tr
                 key={idx}
-                className="border-b border-gray-200 hover:bg-gray-100"
+                className="border-b border-gray-200  hover:bg-gray-100"
               >
-                <td className="py-3 px-6">{item.date}</td>
-                <td className="py-3 px-6">{item.position}</td>
-                <td className="py-3 px-6">{item.traffic}</td>
-                <td className="py-3 px-6">{item.impressions}</td>
-                <td className="py-3 px-6">{item.clicks}</td>
+                <td className="py-3 px-6">{item.Date}</td>
+                <td className="py-3 px-6">{item.Position}</td>
+                {/* <td className="py-3 px-6">{item.traffic}</td> */}
+                <td className="py-3 px-6">{item.Impressions}</td>
+                <td className="py-3 px-6">{item.Clicks}</td>
                 <td className="py-3 px-6">
-                  {getCTR(item.clicks, item.impressions)}%
+                  {/* {getCTR(item.clicks, item.impressions)}% */}
+                  {item.CTR}
                 </td>
               </tr>
             ))}
@@ -190,9 +193,9 @@ const PerformanceTable = () => {
         ))}
       </div>
 
-      <p className="text-sm text-gray-500 mt-4">
+      {/* <p className="text-sm text-gray-500 mt-4">
         CTR is calculated as (Clicks / Impressions) × 100.
-      </p>
+      </p> */}
     </div>
   );
 };
